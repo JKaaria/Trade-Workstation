@@ -1,0 +1,8 @@
+pandas_datareader
+datetime
+numpy
+matplotlib
+yfinance
+opstrat
+scipy
+yahoofinancials
