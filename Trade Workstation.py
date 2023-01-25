@@ -6,9 +6,9 @@ import yfinance as yf
 import opstrat as op
 from scipy.stats import norm
 
-ticker = "AAPL"
+ticker = "XLP"
 
-beta = 1.27
+beta = .62
 stock = yf.Ticker(ticker)
 latest_price = stock.history(period='1d')['Close'][0]
 price = round(latest_price, 2) 
