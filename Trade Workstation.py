@@ -5,13 +5,10 @@ import matplotlib.pyplot as plt
 import yfinance as yf
 import opstrat as op
 from scipy.stats import norm
-from yahoofinancials import YahooFinancials
 
 ticker = "AAPL"
 
-yahoo_financials = YahooFinancials(ticker)
-
-beta = (yahoo_financials.get_beta())
+beta = 1.27
 stock = yf.Ticker(ticker)
 latest_price = stock.history(period='1d')['Close'][0]
 price = round(latest_price, 2) 
@@ -34,7 +31,7 @@ print ("Volatility:",vol*beta)
 St = price
 K = price
 r = rate
-T = 87
+T = 90
 v= (vol*beta)
 
 call=op.black_scholes(K=K, St=St, r=r, t=T, v=v, type='c')
@@ -61,12 +58,13 @@ sim_rets = np.random.normal(mu,sigma,252)
 initial = df['Adj Close'].iloc[-1]
 sim_prices = initial * (sim_rets + 1).cumprod()
 
-for _ in range(100):
-    sim_rets = np.random.normal(mu,sigma,252)
-    sim_prices = initial * (sim_rets + 1).cumprod()
-    plt.axhline(initial,c='k')
-    plt.plot(sim_prices)
-    plt.ylabel(price)
-    plt.grid()
-    plt.title(ticker)
-    
+def montecarlo(ticker):
+    for _ in range(100):
+        sim_rets = np.random.normal(mu,sigma,252)
+        sim_prices = initial * (sim_rets + 1).cumprod()
+        plt.axhline(initial,c='k')
+        plt.plot(sim_prices)
+        plt.ylabel(price)
+        plt.grid()
+        plt.title(ticker)
+montecarlo(ticker)
