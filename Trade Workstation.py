@@ -5,9 +5,13 @@ import matplotlib.pyplot as plt
 import yfinance as yf
 import opstrat as op
 from scipy.stats import norm
+from yahoofinancials import YahooFinancials
 
 ticker = "AAPL"
-beta = 1.27
+
+yahoo_financials = YahooFinancials(ticker)
+
+beta = (yahoo_financials.get_beta())
 stock = yf.Ticker(ticker)
 latest_price = stock.history(period='1d')['Close'][0]
 price = round(latest_price, 2) 
@@ -23,8 +27,9 @@ latest_price3 = output2.history(period='1d')['Close'][0]
 vol = round(latest_price3, 2) 
 
 print (ticker,"Price:",price)
-print ("Rate:",rate)
-print ("Vol:",vol)
+print (ticker,"Beta", beta)
+print ("Risk Free Rate:",rate)
+print ("Volatility:",vol*beta)
 
 St = price
 K = price
@@ -56,19 +61,12 @@ sim_rets = np.random.normal(mu,sigma,252)
 initial = df['Adj Close'].iloc[-1]
 sim_prices = initial * (sim_rets + 1).cumprod()
 
-def montecarlo():
-    for _ in range(100):
-        sim_rets = np.random.normal(mu,sigma,252)
-        sim_prices = initial * (sim_rets + 1).cumprod()
-        plt.axhline(initial,c='k')
-        plt.plot(sim_prices)
-        plt.ylabel(price)
-        plt.grid()
-        plt.title(ticker)
-montecarlo()
-
-
-from yahoofinancials import YahooFinancials
-tickers = ['AAPL', 'GOOG', 'C']
-yahoo_financials = YahooFinancials(tickers, concurrent=True, max_workers=8, country="US")
-get_beta()
+for _ in range(100):
+    sim_rets = np.random.normal(mu,sigma,252)
+    sim_prices = initial * (sim_rets + 1).cumprod()
+    plt.axhline(initial,c='k')
+    plt.plot(sim_prices)
+    plt.ylabel(price)
+    plt.grid()
+    plt.title(ticker)
+    
