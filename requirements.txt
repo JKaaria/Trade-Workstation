@@ -6,3 +6,4 @@ yfinance
 opstrat
 scipy
 yahoofinancials
+sklearn
