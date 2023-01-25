@@ -5,6 +5,3 @@ matplotlib
 yfinance
 opstrat
 scipy
-yahoofinancials
-sklearn
-YahooFinancials
