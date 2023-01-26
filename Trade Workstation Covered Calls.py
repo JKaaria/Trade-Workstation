@@ -43,7 +43,8 @@ print('Strategy Cost:',float((call2['value']['option value']))-(call1['value']['
 
 op_1 = {'op_type':'c','strike':price*1.05,'tr_type':'s','op_pr':(call1['value']['option value'])}
 op_2 = {'op_type':'c','strike':price*0.95,'tr_type':'b','op_pr':(call2['value']['option value'])}
-op.multi_plotter(spot=price, op_list=[op_1,op_2])
+op.multi_plotter(spot=price, op_list=[op_1,op_2],save=True,file='Covered Call Pay Off')
+
 
 print('Call 1 Delta is:',call1['greeks']['delta'])
 print('Call 2 Delta is:',call2['greeks']['delta'])
@@ -63,3 +64,4 @@ for _ in range(100):
     plt.ylabel(price)
     plt.grid()
     plt.title(ticker)
+    plt.savefig("Covered Call - Monte Carlo")

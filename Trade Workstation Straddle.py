@@ -44,7 +44,7 @@ print('Strategy Cost:',float((call['value']['option value']))+(put['value']['opt
 
 op_1 = {'op_type':'c','strike':price,'tr_type':'b','op_pr':(call['value']['option value'])}
 op_2 = {'op_type':'p','strike':price,'tr_type':'b','op_pr':(put['value']['option value'])}
-op.multi_plotter(spot=price, op_list=[op_1,op_2])
+op.multi_plotter(spot=price, op_list=[op_1,op_2],save=True,file='Straddle Pay Off')
 
 print('Call Delta is:',call['greeks']['delta'])
 print('Put Delta is:',put['greeks']['delta'])
@@ -68,4 +68,5 @@ def montecarlo(ticker):
         plt.ylabel(price)
         plt.grid()
         plt.title(ticker)
+        plt.savefig("Straddle - Monte Carlo")
 montecarlo(ticker)
