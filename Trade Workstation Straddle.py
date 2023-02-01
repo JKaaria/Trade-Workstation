@@ -6,17 +6,52 @@ import yfinance as yf
 import opstrat as op
 from scipy.stats import norm
 
-ticker = "XLP"
 
-beta = .62
+ticker = "MRK"
+
+## Risk Free Rate
+input = "^TNX"
+output = yf.Ticker(input)
+latest_price2 = output.history(period='1d')['Close'][0]
+rate = round(latest_price2, 2)
+
+## Index Returns 
+input = "SPY"
+output = yf.Ticker(input)
+latest_price2 = output.history(period='1d')['Close'][0]
+sday1 = round(latest_price2, 2) 
+
+output1 = yf.Ticker(input)
+latest_price3 = output1.history(period='1y')['Close'][0]
+sday2 = round(latest_price3, 2) 
+
+iret = (((sday1-sday2)/100)-rate)
+
+## Stock Returns 
+input = ticker
+output = yf.Ticker(input)
+latest_price2 = output.history(period='1d')['Close'][0]
+sday1 = round(latest_price2, 2) 
+
+output1 = yf.Ticker(input)
+latest_price3 = output1.history(period='1y')['Close'][0]
+sday2 = round(latest_price3, 2) 
+
+sret = (((sday1-sday2)/100)-rate)
+
+## Solving for Beta
+
+beta =(sret/iret)
+
+beta = beta
+
 stock = yf.Ticker(ticker)
 latest_price = stock.history(period='1d')['Close'][0]
 price = round(latest_price, 2) 
 
-input = "^TNX"
-output = yf.Ticker(input)
-latest_price2 = output.history(period='1d')['Close'][0]
-rate = round(latest_price2, 2) 
+stock = yf.Ticker(ticker)
+latest_price = stock.history(period='1d')['Close'][0]
+price = round(latest_price, 2) 
 
 input2 = "^VIX"
 output2 = yf.Ticker(input2)
@@ -44,7 +79,7 @@ print('Strategy Cost:',float((call['value']['option value']))+(put['value']['opt
 
 op_1 = {'op_type':'c','strike':price,'tr_type':'b','op_pr':(call['value']['option value'])}
 op_2 = {'op_type':'p','strike':price,'tr_type':'b','op_pr':(put['value']['option value'])}
-op.multi_plotter(spot=price, op_list=[op_1,op_2],save=True,file='Straddle Pay Off')
+op.multi_plotter(spot=price, op_list=[op_1,op_2],save=True,file='Straddle  Pay Off')
 
 print('Call Delta is:',call['greeks']['delta'])
 print('Put Delta is:',put['greeks']['delta'])
