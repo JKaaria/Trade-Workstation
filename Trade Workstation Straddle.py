@@ -15,35 +15,29 @@ output = yf.Ticker(input)
 latest_price2 = output.history(period='1d')['Close'][0]
 rate = round(latest_price2, 2)
 
-## Index Returns 
-input = "SPY"
-output = yf.Ticker(input)
-latest_price2 = output.history(period='1d')['Close'][0]
-sday1 = round(latest_price2, 2) 
 
-output1 = yf.Ticker(input)
-latest_price3 = output1.history(period='1y')['Close'][0]
-sday2 = round(latest_price3, 2) 
+def get_beta(stock_symbol, market_index_symbol):
+    stock_data = yf.Ticker(stock_symbol).history(period='max')
+    market_index_data = yf.Ticker(market_index_symbol).history(period='max')
 
-iret = (((sday1-sday2)/100)-rate)
+    # Get the overlapping dates in the historical data
+    start_date = max(stock_data.index.min(), market_index_data.index.min())
+    end_date = min(stock_data.index.max(), market_index_data.index.max())
 
-## Stock Returns 
-input = ticker
-output = yf.Ticker(input)
-latest_price2 = output.history(period='1d')['Close'][0]
-sday1 = round(latest_price2, 2) 
+    # Slice the historical data to only include the overlapping dates
+    stock_data = stock_data.loc[start_date:end_date]
+    market_index_data = market_index_data.loc[start_date:end_date]
 
-output1 = yf.Ticker(input)
-latest_price3 = output1.history(period='1y')['Close'][0]
-sday2 = round(latest_price3, 2) 
+    # Calculate the daily returns for the stock and market index
+    stock_returns = stock_data['Close'].pct_change()[1:]
+    market_returns = market_index_data['Close'].pct_change()[1:]
 
-sret = (((sday1-sday2)/100)-rate)
+    # Calculate the beta using the covariance and volatility of the returns
+    covariance = stock_returns.cov(market_returns)
+    market_volatility = market_returns.var()
+    return covariance / market_volatility
 
-## Solving for Beta
-
-beta =(sret/iret)
-
-beta = beta
+beta = get_beta(ticker, 'SPY')
 
 stock = yf.Ticker(ticker)
 latest_price = stock.history(period='1d')['Close'][0]
