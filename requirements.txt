@@ -5,3 +5,4 @@ matplotlib
 yfinance
 opstrat
 scipy
+pandas_market_calendars
